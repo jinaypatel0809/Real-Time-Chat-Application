@@ -4,7 +4,7 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 
 function ProtectedDashboard() {
-  return localStorage.getItem('chatUser') && localStorage.getItem('chatToken')
+  return sessionStorage.getItem('chatUser') && sessionStorage.getItem('chatToken')
     ? <Dashboard />
     : <Navigate to="/login" replace />
 }

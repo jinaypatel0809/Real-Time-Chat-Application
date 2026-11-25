@@ -14,7 +14,7 @@ export default function Dashboard() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('chats')
   const [user, setUser] = useState(() => {
-    const savedUser = JSON.parse(localStorage.getItem('chatUser') || 'null')
+    const savedUser = JSON.parse(sessionStorage.getItem('chatUser') || 'null')
     return savedUser ? { ...currentUser, id: savedUser.id, name: savedUser.fullName, email: savedUser.email } : currentUser
   })
   const [chats, setChats] = useState([])
@@ -26,7 +26,7 @@ export default function Dashboard() {
   const apiFetch = useCallback((url, options = {}) => fetch(apiUrl(url), {
     ...options,
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('chatToken') || ''}`,
+      Authorization: `Bearer ${sessionStorage.getItem('chatToken') || ''}`,
       ...(options.body ? { 'Content-Type': 'application/json' } : {}),
       ...options.headers,
     },
@@ -35,8 +35,8 @@ export default function Dashboard() {
   const loadUsers = useCallback(async () => {
     const response = await apiFetch('/api/chat/users')
     if (response.status === 401) {
-      localStorage.removeItem('chatUser')
-      localStorage.removeItem('chatToken')
+      sessionStorage.removeItem('chatUser')
+      sessionStorage.removeItem('chatToken')
       navigate('/login')
       return
     }
@@ -71,8 +71,8 @@ export default function Dashboard() {
       .catch((error) => {
         console.error(error)
         if (error.message.includes('session expired')) {
-          localStorage.removeItem('chatUser')
-          localStorage.removeItem('chatToken')
+          sessionStorage.removeItem('chatUser')
+          sessionStorage.removeItem('chatToken')
           navigate('/login')
         }
       })
@@ -91,8 +91,8 @@ export default function Dashboard() {
       try {
         const response = await apiFetch(`/api/chat/messages/${selectedChatId}`)
         if (response.status === 401) {
-          localStorage.removeItem('chatUser')
-          localStorage.removeItem('chatToken')
+          sessionStorage.removeItem('chatUser')
+          sessionStorage.removeItem('chatToken')
           navigate('/login')
           return
         }
@@ -173,7 +173,7 @@ export default function Dashboard() {
       settings: account.settings,
     }
     setUser(nextUser)
-    localStorage.setItem('chatUser', JSON.stringify({ id: account.id, fullName: account.fullName, email: account.email }))
+    sessionStorage.setItem('chatUser', JSON.stringify({ id: account.id, fullName: account.fullName, email: account.email }))
   }
 
   const saveSettings = async (changes) => {
@@ -194,8 +194,8 @@ export default function Dashboard() {
   const toggleTheme = () => saveSettings({ theme: darkMode ? 'light' : 'dark' }).catch((error) => console.error(error))
 
   const handleLogout = () => {
-    localStorage.removeItem('chatUser')
-    localStorage.removeItem('chatToken')
+    sessionStorage.removeItem('chatUser')
+    sessionStorage.removeItem('chatToken')
     document.documentElement.dataset.theme = 'light'
     navigate('/login')
   }

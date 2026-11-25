@@ -49,8 +49,8 @@ export default function Login() {
       })
       const result = await readApiResponse(response)
       if (!response.ok) throw new Error(result.message || 'Login failed.')
-      localStorage.setItem('chatUser', JSON.stringify({ id: result.user.id, fullName: result.user.fullName, email: result.user.email }))
-      localStorage.setItem('chatToken', result.token)
+      sessionStorage.setItem('chatUser', JSON.stringify({ id: result.user.id, fullName: result.user.fullName, email: result.user.email }))
+      sessionStorage.setItem('chatToken', result.token)
       navigate('/dashboard')
     } catch (error) {
       setMessage(error.message || 'Could not connect to the server.')
