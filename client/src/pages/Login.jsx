@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff, LogIn, Check, Camera } from 'lucide-react'
 import AuthCard from '../components/AuthCard'
+import { apiUrl, readApiResponse } from '../api'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -41,12 +42,12 @@ export default function Login() {
     setMessage('')
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(apiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password: formData.password, ...(avatar ? { avatar } : {}) }),
       })
-      const result = await response.json()
+      const result = await readApiResponse(response)
       if (!response.ok) throw new Error(result.message || 'Login failed.')
       localStorage.setItem('chatUser', JSON.stringify({ id: result.user.id, fullName: result.user.fullName, email: result.user.email }))
       localStorage.setItem('chatToken', result.token)

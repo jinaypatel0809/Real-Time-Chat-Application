@@ -8,6 +8,7 @@ import SearchUsersView from '../components/SearchUsersView'
 import ProfileView from '../components/ProfileView'
 import SettingsView from '../components/SettingsView'
 import { currentUser } from '../data/mockData'
+import { apiUrl, readApiResponse } from '../api'
 
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ export default function Dashboard() {
   const [darkMode, setDarkMode] = useState(false)
   const [settings, setSettings] = useState({ theme: 'light', onlineStatus: true, readReceipts: true })
 
-  const apiFetch = useCallback((url, options = {}) => fetch(url, {
+  const apiFetch = useCallback((url, options = {}) => fetch(apiUrl(url), {
     ...options,
     headers: {
       Authorization: `Bearer ${localStorage.getItem('chatToken') || ''}`,
@@ -39,7 +40,7 @@ export default function Dashboard() {
       navigate('/login')
       return
     }
-    const result = await response.json()
+    const result = await readApiResponse(response)
     if (!response.ok) throw new Error(result.message || 'Unable to load users.')
     setChats(result.users)
     setSelectedChatId((selectedId) => selectedId || result.users[0]?.id || null)
@@ -49,7 +50,7 @@ export default function Dashboard() {
     apiFetch('/api/account/me')
       .then(async (response) => {
         if (response.status === 401) throw new Error('Your session expired. Please sign in again.')
-        const result = await response.json()
+        const result = await readApiResponse(response)
         if (!response.ok) throw new Error(result.message || 'Unable to load your account.')
         const account = result.user
         setUser((previous) => ({
@@ -95,7 +96,7 @@ export default function Dashboard() {
           navigate('/login')
           return
         }
-        const result = await response.json()
+        const result = await readApiResponse(response)
         if (!response.ok) throw new Error(result.message || 'Unable to load messages.')
         if (active) {
           setChats((current) => current.map((chat) =>
@@ -126,7 +127,7 @@ export default function Dashboard() {
       method: 'POST',
       body: JSON.stringify({ text }),
     })
-    const result = await response.json()
+    const result = await readApiResponse(response)
     if (!response.ok) throw new Error(result.message || 'Unable to send message.')
     setChats((prev) => prev.map((chat) => chat.id === chatId
       ? {
@@ -157,7 +158,7 @@ export default function Dashboard() {
         ...(form.avatar?.startsWith('data:image/') ? { avatar: form.avatar } : {}),
       }),
     })
-    const result = await response.json()
+    const result = await readApiResponse(response)
     if (!response.ok) throw new Error(result.message || 'Unable to save profile.')
     const account = result.user
     const nextUser = {
@@ -180,7 +181,7 @@ export default function Dashboard() {
       method: 'PATCH',
       body: JSON.stringify({ settings: changes }),
     })
-    const result = await response.json()
+    const result = await readApiResponse(response)
     if (!response.ok) throw new Error(result.message || 'Unable to save settings.')
     const nextSettings = result.user.settings
     setSettings(nextSettings)

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { User, Mail, Lock, Eye, EyeOff, UserPlus, Camera } from 'lucide-react'
 import AuthCard from '../components/AuthCard'
+import { apiUrl, readApiResponse } from '../api'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -43,12 +44,12 @@ export default function Register() {
     }
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(apiUrl('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fullName: formData.fullName, email: formData.email, password: formData.password, avatar }),
       })
-      const result = await response.json()
+      const result = await readApiResponse(response)
       if (!response.ok) throw new Error(result.message || 'Registration failed.')
       navigate('/login', { state: { message: 'Account created. Please sign in.' } })
     } catch (error) {
