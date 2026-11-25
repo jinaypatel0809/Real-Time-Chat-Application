@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-[#eef0ff] text-[#141526] antialiased;
+  }
+}
+
+html[data-theme='dark'] body {
+  background: #131421;
+  color: #f3f4f8;
+}
+
+html[data-theme='dark'] .bg-white,
+html[data-theme='dark'] [class~="bg-[#F7F8FD]"],
+html[data-theme='dark'] [class~="bg-[#F8F9FE]"],
+html[data-theme='dark'] [class~="bg-[#eef0ff]"],
+html[data-theme='dark'] [class~="bg-[#F3F4F9]"],
+html[data-theme='dark'] [class~="bg-[#F5F6FB]"],
+html[data-theme='dark'] [class~="bg-[#F4F2FF]"],
+html[data-theme='dark'] [class~="bg-[#ECE9FE]"],
+html[data-theme='dark'] [class~="bg-[#E8EAF6]"] {
+  background-color: #1d1e2e !important;
+}
+
+html[data-theme='dark'] [class~="text-[#141526]"],
+html[data-theme='dark'] [class~="text-[#3A3D54]"],
+html[data-theme='dark'] [class~="text-[#2B2E44]"],
+html[data-theme='dark'] [class~="text-[#5A5E78]"],
+html[data-theme='dark'] [class~="text-[#6B6E88]"],
+html[data-theme='dark'] [class~="text-[#686C85]"],
+html[data-theme='dark'] [class~="text-[#7A7D96]"],
+html[data-theme='dark'] [class~="text-[#8A8EA6]"] {
+  color: #d4d5e2 !important;
+}
+
+html[data-theme='dark'] [class*="border-[#ECEEF6]"],
+html[data-theme='dark'] [class*="border-[#E5E7F2]"],
+html[data-theme='dark'] [class*="border-[#DCE0EC]"] {
+  border-color: #343548 !important;
+}
+
+html[data-theme='dark'] input,
+html[data-theme='dark'] textarea {
+  color: #f3f4f8;
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: #9b9db1;
+}
